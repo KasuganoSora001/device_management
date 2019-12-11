@@ -421,3 +421,166 @@
 </script>
 ```
 
+
+
+### 9、计算属性
+
+​	基本使用：使用Vue对象中的computed域，编写相应属性方法，使用时只需按平常的属性插值即可
+
+```html
+<div id="app">
+  <h2>{{firstName + ' ' + lastName}}</h2>
+  <h2>{{firstName}} {{lastName}}</h2>
+  <h2>{{getFullName()}}</h2>
+  <h2>{{fullName}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      firstName: 'kobe',
+      lastName: 'bryant'
+    },
+    // 计算属性：直接当做属性来用即可
+    computed: {
+      fullName: function(){
+        return this.firstName + '-' + this.lastName;
+      }
+    },
+    methods: {
+      getFullName: function(){
+        return this.firstName + '_' + this.lastName;
+      },
+    }
+  })
+</script>
+```
+
+​		
+
+​	**复杂使用：**
+
+```html
+<div id="app">
+  <h2>总价格：{{totalPrice2}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      books: [
+        {id: 1, name: '深入理解JVM', price: 100},
+        {id: 2, name: 'JaveWeb', price: 110},
+        {id: 3, name: '数据结构与算法', price: 120},
+        {id: 4, name: '深入理解计算机原理', price: 130}
+      ]
+    },
+
+    computed: {
+        
+      totalPrice: function(){
+        let result = 0;
+        for(let i = 0; i < this.books.length; i++){
+          result += this.books[i].price;
+        }
+        return result;
+      },
+        
+      totalPrice2: function(){
+        let result = 0;
+        for(let book of this.books){
+          result += book.price;
+        }
+        return result;
+      }
+        
+    },
+  })
+</script>
+
+```
+
+​	==**计算属性的setter和getter**==
+
+```text
+一般来说，计算属性主要是对属性进行一定计算后返回结果，因此一般只需计算一次
+
+在计算属性中可以把成员当做一个个的对象，都有set、get方法
+
+并不希望有人能够对该计算属性进行set操作
+
+一般属性不写set方法，因此为一个只读属性
+
+
+```
+
+```html
+<div id="app">
+  <h2>{{fullName}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+
+    data: {
+      firstName: 'kobe',
+      lastName: 'bryant'
+    },
+
+    computed: {
+
+      // 成员属性的完整写法
+      fullName: {
+        set: function(newVaule){
+          const names = newVaule.split(' ');
+          this.firstName = names[0];
+          this.lastName = names[1];
+        },
+        get: function(){
+          return this.firstName + ' ' + this.lastName;
+        }
+      },
+      
+      // 若属性为只读，可以为以下写法
+      fullName2: function(){
+        return this.firstName + ' ' + this.lastName;
+      }
+      
+    }
+  })
+</script>
+```
+
+
+
+
+
+### 10、methods和computed
+
+```text
+methods主要是函数的调用
+computed主要是对属性的计算并赋值
+methods没有缓存，每一次的调用都会重新执行函数
+computed有缓存，再次调用时会从缓存中直接取值
+在调用computed中的属性时，会先观察该属性的 组成 有没有发生变化，若没有，则直接从缓存中返回结果
+```
+
+
+
+
+
+## 三、ES6补充
+
+### 1、var  /  let
+
+```text
+var和let都是定义变量的关键字
+let有块级作用域，var没有
+ES5之前因为if/for都没有跨级作用域的概念，所以在很多时候，都需要借助function作用域来做闭包操作，来解决变量的问题
+```
+
+
+
