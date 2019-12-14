@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <!--stop：禁止事件冒泡-->
+  <div @click="divClick">
+    aaaaa
+    <button @click.stop="btnClick">按钮</button>
+  </div>
+
+  <!--prevent：禁止默认事件的发生-->
+  <form action="baidu">
+    <input type="submit" @click.prevent="subClick">
+  </form>
+
+  <!-- @keyup | @keydown 监听键帽的按下与抬起 -->
+  <!-- @keyup.enter 监听键盘enter键的抬起 -->
+  <input type="text" @keyup.p="keyup">
+
+  <!-- once：只触发一次回调，可以防止表单重复提交 -->
+  <form action="baidu">
+    <input type="submit" @click.once="subClick2">
+  </form>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+
+    },
+    methods: {
+      divClick() {
+        console.log("divClick");
+      },
+      btnClick() {
+        console.log("btnClick");
+      },
+      subClick() {
+        console.log("submit");
+      },
+      keyup() {
+        console.log("keyup");
+      },
+      subClick2() {
+        console.log("submit");
+      }
+    }
+
+  })
+</script>
+
+</body>
+</html>

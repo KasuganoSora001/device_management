@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <h2 v-if="isShow">{{msg1}}</h2>
+
+  <h2 v-else>{{msg2}}</h2>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      msg1: 'isShow为true时，显示我',
+      msg2: 'isShow为false时，显示我',
+      isShow: true
+    }
+  })
+</script>
+
+</body>
+</html>

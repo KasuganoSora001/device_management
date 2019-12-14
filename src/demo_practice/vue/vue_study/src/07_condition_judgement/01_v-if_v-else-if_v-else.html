@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <h2>{{result}}</h2>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      score: 99
+    },
+    computed: {
+      result() {
+        let result_msg = '';
+        if(this.score >= 90) {
+          result_msg = '优秀';
+        } else if(this.score >= 70) {
+          result_msg = '良好';
+        }
+        return result_msg;
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

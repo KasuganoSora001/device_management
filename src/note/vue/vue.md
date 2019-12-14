@@ -570,6 +570,325 @@ computed有缓存，再次调用时会从缓存中直接取值
 
 
 
+### 11、事件监听v-on
+
+​	v-on
+
+* 作用：绑定事件监听器
+* 缩写：@
+* 预期：Function | Inline Statement | Object
+* 参数：event
+
+
+
+==基础使用：==
+
+```html
+<div id="app">
+  <p>{{counter}}</p>
+  <button v-on:click="increment">+</button>
+  <button v-on:click="decrement">-</button>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      counter: 0
+    },
+    methods: {
+      increment(){
+        this.counter++
+      },
+      decrement(){
+        this.counter--
+      }
+    }
+  })
+</script>
+```
+
+
+
+==v-on参数==
+
+```text
+情况一：当调用的方法没有参数传递时，方法的()可以省略
+情况二：若方法本身有一个参数，但不传递参数，则默认把 事件event 传递过去
+情况三：若需要同时传入某个参数，且需要使用 event 时，可以通过 $event 传入事件
+```
+
+
+
+==v-on修饰符==
+
+① stop修饰符，禁止事件冒泡
+
+```html
+  <div @click="divClick">
+    aaaaa
+    <button @click.stop="btnClick">按钮</button>
+  </div>
+
+    methods: {
+      divClick() {
+        console.log("divClick");
+      },
+      btnClick() {
+        console.log("btnClick");
+      }
+    }
+
+```
+
+
+
+②prevent：禁止默认事件，如表单自动提交
+
+```html
+<form action="baidu">
+    <input type="submit" @click.prevent="subClick">
+</form>
+```
+
+
+
+③ 
+
+```text
+@keyup | @keydown 监听键帽的按下与抬起
+@keyup.enter 监听键盘enter键的抬起
+@keydown.p   监听键盘p键的按下
+```
+
+```html
+<input type="text" @keyup.enter="keyup">
+```
+
+
+
+④ once：只触发一次回调函数
+
+```html
+<!-- once：只触发一次回调，可以防止表单重复提交 -->
+  <form action="baidu">
+    <input type="submit" @click.once="subClick2">
+  </form>
+```
+
+
+
+### 12、条件判断v-if | v-else-if | v-else
+
+==v-if使用==
+
+```html
+<div id="app">
+  <h2 v-if="isShow">{{message}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'isShow为true时，显示我',
+      isShow: true
+    }
+  })
+</script>
+```
+
+
+
+
+
+==v-else使用==
+
+```html
+<div id="app">
+  <h2 v-if="isShow">{{msg1}}</h2>
+  <h2 v-else>{{msg2}}</h2>
+</div>
+```
+
+
+
+==v-else-if使用==
+
+* 不推荐这样使用
+
+```html
+<div id="app">
+  <h2 v-if="score>=90">优秀</h2>
+  <h2 v-else-if="score>=70">良好</h2>
+  <h2 v-else-if="score>=60">及格</h2>
+  <h2 v-else>不及格</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      score: 99
+    }
+  })
+</script>
+```
+
+* 可以写成以下形式：使用计算属性s
+
+```html
+<div id="app">
+  <h2>{{result}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      score: 99
+    },
+    computed: {
+      result() {
+        let result_msg = '';
+        if(this.score >= 90) {
+          result_msg = '优秀';
+        } else if(this.score >= 70) {
+          result_msg = '良好';
+        }
+        return result_msg;
+      }
+    }
+  })
+</script>
+```
+
+
+
+### 13、vue底层：virtual dom
+
+```text
+vue进行页面渲染时，并不会直接把我们的dom直接显示在浏览器上，而是多了一个中间的处理dom的过程
+```
+
+```html
+<span v-if="isUserNameLogin">
+  <label>用户账号</label>
+  <input type="text" placeholder="用户账号">
+</span>
+
+<span v-else>
+  <label>邮箱账号</label>
+  <input type="text" placeholder="邮箱账号">
+</span>
+```
+
+* 例如渲染以上代码时，label和input进行切换时，在virtual dom中，会**重复利用**这些标签，只不过会改变标签的部分属性，而相似的属性时不会进行改变的
+* 这也就导致了一个问题，当用户在input输入信息时，这时进行切换，则virtual dom也会将这个input的信息显示出来
+
+![](images/virtual_dom.png)
+
+==解决virtual dom进行标签复用的问题==
+
+* 给元素添加一个**key属性**，若前后相同元素中key属性不同，则不会进行标签复用，若相同，则会进行标签复用
+
+```html
+<span v-if="isUserNameLogin">
+    用户账号：<input type="text" placeholder="用户账号" key="username">
+</span>
+
+<span v-else>
+    邮箱账号：<input type="text" placeholder="邮箱账号" key="email">
+</span>
+```
+
+
+
+### 14、v-show
+
+v-show展示的效果与v-if相似，但原理却不同
+
+使用 v-if 修饰元素 且 判断条件为false时，元素将不会出现在DOM中
+
+使用 v-show 修饰元素 且 判断条件为false时，元素会被添加上style: display="none"
+
+==使用场景==：
+
+* 当需要在显示与隐藏频繁切换时，推荐使用v-show
+* 当切换显示数量较少时，推荐使用v-if
+
+
+
+
+
+### 15、循环遍历v-for
+
+```html
+<div id="app">
+  <ul>
+    <li v-for="item in names">{{item}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(item,index) in names">{{index}}--{{item}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="value in book">{{value}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(value,key) in book">{{key}}--{{value}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(value,key,index) in book">{{index}}--{{key}}--{{value}}</li>
+  </ul>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      names: ['james', 'harry', 'curry', 'kobe'],
+      book: {
+        id: '01',
+        name: 'vue',
+        price: '100'
+      }
+    }
+  })
+</script>
+```
+
+
+
+==效果：==
+
+![](images/v-for.png)
+
+
+
+
+
+官方推荐在使用v-for时，给元素添加绑定key属性
+
+virtual dom中的diff算法：
+
+* 当在多个li数组中插入新的元素时，如在[A,B,C,D,E]中插入F到B后面
+* 则根据diff算法，并不会在B后面添加一个li，而是将C变成F，D变成C，如此类推，直到最后新建一个li标签
+* 如此会导致virtual dom的复用性能降低
+* 若在li标签中加入key属性，则virtual dom在进行渲染时，会根据key是否对应来进行标签复用，这样就能提高复用性能
+
+```html
+<ul>
+  <li v-for="(item,index) in names" :key="item">{{index}}--{{item}}</li>
+</ul>
+```
+
+
+
 
 
 ## 三、ES6补充
@@ -580,6 +899,59 @@ computed有缓存，再次调用时会从缓存中直接取值
 var和let都是定义变量的关键字
 let有块级作用域，var没有
 ES5之前因为if/for都没有跨级作用域的概念，所以在很多时候，都需要借助function作用域来做闭包操作，来解决变量的问题
+```
+
+
+
+### 2、const
+
+```text
+使用const修饰的标识符为常量，不可以再次赋值
+在使用const定义标识符时，必须进行赋值初始化
+常量的含义是指向的对象不能发生改变，但可以改变对象中属性的值
+
+```
+
+### 3、对象增强写法
+
+​	==**1、属性增强**==
+
+```html
+const name = 'Mr.Liu';
+  const age = '18';
+
+  // ES5写法
+  const obj = {
+    name: name,
+    age: age
+  }
+
+  // ES6写法
+  const obj2 = {
+    name,
+    age
+  }
+
+  console.log(obj);
+  console.log(obj2);
+```
+
+
+
+​	==**2、方法增强**==
+
+```html
+  // ES5写法
+  const obj3 = {
+    run: function(){},
+    eat: function(){}
+  }
+
+  // ES6写法
+  const obj4 = {
+    run(){},
+    eat(){}
+  }
 ```
 
 

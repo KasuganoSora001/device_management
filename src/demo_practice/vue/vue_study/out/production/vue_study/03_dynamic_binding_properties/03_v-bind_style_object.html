@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <!--<h2 :style="{key1(样式名): val1(变量值), key2: val2}">测试</h2>-->
+  <h2 :style="{fontSize: finalSize + 'px', color: finalColor}">测试</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      finalSize: 100,
+      finalColor: 'red',
+    }
+  })
+</script>
+
+
+
+</body>
+</html>

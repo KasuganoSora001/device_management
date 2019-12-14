@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <ul>
+    <li v-for="item in names">{{item}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(item,index) in names" :key="item">{{index}}--{{item}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="value in book">{{value}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(value,key) in book">{{key}}--{{value}}</li>
+  </ul>
+
+  <ul>
+    <li v-for="(value,key,index) in book">{{index}}--{{key}}--{{value}}</li>
+  </ul>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      names: ['james', 'harry', 'curry', 'kobe'],
+      book: {
+        id: '01',
+        name: 'vue',
+        price: '100'
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

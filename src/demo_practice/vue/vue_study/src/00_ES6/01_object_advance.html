@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script>
+
+  const name = 'Mr.Liu';
+  const age = '18';
+
+  /*
+   * 属性增强写法
+   */
+
+  // ES5写法
+  const obj = {
+    name: name,
+    age: age
+  }
+
+  // ES6写法
+  const obj2 = {
+    name,
+    age
+  }
+
+  console.log(obj);
+  console.log(obj2);
+
+
+  /*
+   * 方法增强写法
+   */
+
+  // ES5写法
+  const obj3 = {
+    run: function(){},
+    eat: function(){}
+  }
+
+  // ES6写法
+  const obj4 = {
+    run(){},
+    eat(){}
+  }
+
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>计算属性基础使用</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <h2>总价格：{{totalPrice2}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      books: [
+        {id: 1, name: '深入理解JVM', price: 100},
+        {id: 2, name: 'JaveWeb', price: 110},
+        {id: 3, name: '数据结构与算法', price: 120},
+        {id: 4, name: '深入理解计算机原理', price: 130}
+      ]
+    },
+
+    computed: {
+
+      totalPrice: function(){
+        let result = 0;
+        for(let i = 0; i < this.books.length; i++){
+          result += this.books[i].price;
+        }
+        return result;
+      },
+
+      totalPrice2: function(){
+        let result = 0;
+        for(let book of this.books){
+          result += book.price;
+        }
+        return result;
+      }
+    },
+  })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>计算属性基础使用</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <h2>{{firstName + ' ' + lastName}}</h2>
+  <h2>{{firstName}} {{lastName}}</h2>
+  <h2>{{getFullName()}}</h2>
+  <h2>{{fullName}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      firstName: 'kobe',
+      lastName: 'bryant'
+    },
+    // 计算属性：直接当做属性来用即可
+    computed: {
+      fullName: function(){
+        return this.firstName + '-' + this.lastName;
+      }
+    },
+    methods: {
+      getFullName: function(){
+        return this.firstName + '_' + this.lastName;
+      },
+    }
+  })
+</script>
+
+</body>
+</html>
