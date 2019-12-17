@@ -889,6 +889,278 @@ virtual dom中的diff算法：
 
 
 
+### 16、filters过滤器
+
+```text
+过滤器会将前面的值：getTotalPrice(book)传到showPrice函数中，进行过滤后返回结果
+```
+
+
+
+```html
+<td>{{getTotalPrice(book) | showPrice}}</td>
+
+filters: {
+      showPrice(price) {
+        return '￥' + price.toFixed(2);
+      }
+	}
+```
+
+
+
+### 17、JS高阶函数
+
+==函数式编程==
+
+```html
+<script>
+
+
+  const nums = [1, 20, 44, 110, 55, 200];
+
+  // filter：将数组进行过滤
+  // 返回值为true：将当前数组元素添加到新数组中
+  // 返回值为false：当前元素不会添加到新数组中
+  let newNums = nums.filter(function(n) {
+    return (n <= 100);
+  })
+
+  // map：将数组中的各个元素进行运算
+  // 返回值为运算后的结果，该结果会作为一个新元素添加到新数组中
+  let newNums2 = newNums.map(function(n) {
+    return n * 2;
+  })
+
+
+  // reduce：对数组进行汇总
+  // result：参数previousValue的初始值为reduce函数的第二个参数值，这里也就是0，若不写第二个参数，默认为0
+  // 每次返回的结果都会作为下一次遍历的result
+  // n：数组元素
+  let totalNum = newNums2.reduce(function(result, n) {
+    return result + n;
+  },0)
+
+
+</script>
+```
+
+
+
+==简洁写法：链式编程==
+
+```html
+<script>
+    const marks = [2, 40, 200, 1000, 500];
+
+      let totalMarks = marks.filter(function(n) {
+        return n < 250;
+      }).map(function(n) {
+        return n * 2;
+      }).reduce(function(previousValue, n) {
+        return previousValue + n;
+      }, 0)
+</script>
+```
+
+
+
+==箭头写法==
+
+```html
+<script>
+    const counts = [3, 20, 120, 530, 1000];
+
+      let totalCount = counts.filter(n => n < 100)
+      						 .map(n => n * 2)
+      						 .reduce((preVal, n) => preVal + n);
+</script>
+```
+
+
+
+### 18、表单绑定v-model
+
+
+
+#### ①v-model指令实现了**表单**与**数据**的双向绑定
+
+```html
+<!--v-model基础使用-->
+<div id="app">
+  <input type="text" v-model="message">
+  <h2>{{message}}</h2>
+
+  <!--使用v-bind和v-on来实现v-model双向绑定-->
+  <input type="text" :value="message2" @input="changeMessage">
+  <h2>{{message2}}</h2>
+
+</div>
+
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      message2: 'hello'
+    },
+    methods: {
+      changeMessage(event) {
+        this.message2 = event.target.value;
+      }
+    }
+  })
+</script>
+```
+
+* v-model其实是一个语法糖，本质就是：v-bind绑定value属性，v-on绑定input事件
+
+* ```html
+  <input type="text" v-model="message">等同于
+  <input type="text" :value="message" @input="message = $event.target.value">
+  ```
+
+
+
+#### ②v-model 与 radio
+
+```html
+<!-- 
+  v-model 与 radio 的value双向绑定
+  改变data的值可以影响 radio 选项
+  使用v-model绑定统一data时，可以不用再写相同的name属性
+-->
+<div id="app">
+  <label for="male">
+    <input type="radio" id="male" v-model="gender" value="男">男
+  </label>
+  <label for="female">
+    <input type="radio" id="female" v-model="gender" value="女">女
+  </label>
+  <h2>您的性别是：{{gender}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      gender: '男'
+    }
+  })
+</script>
+```
+
+
+
+#### ③v-model 与 checkbox的结合
+
+```html
+<div id="app">
+
+  <!--
+    v-model 绑定 checkbox 是否选中：true | false
+    单个checkbox
+  -->
+  <label for="protocol">
+    <input type="checkbox" id="protocol" v-model="isAgree">同意协议
+  </label>
+  <button :disabled="!isAgree">下一步</button>
+
+  <br/>
+
+  <!--
+    v-model 绑定 checkbox 的value
+    多个checkbox
+  -->
+  <input type="checkbox" v-model="hobbies" value="篮球">篮球
+  <input type="checkbox" v-model="hobbies" value="足球">足球
+  <input type="checkbox" v-model="hobbies" value="乒乓球">乒乓球
+
+  <h2>您的兴趣爱好：[{{hobbies}}]</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      isAgree: false,
+      hobbies: []
+    }
+  })
+</script>
+```
+
+
+
+#### ④v-model 与 select结合
+
+```html
+<div id="app">
+  <select name="fruit" v-model="fruit">
+    <option value="apple">苹果</option>
+    <option value="banana">香蕉</option>
+    <option value="peach">桃子</option>
+    <option value="purple">葡萄</option>
+  </select>
+  <h2>您的选择是：{{fruit}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      fruit: 'banana',
+    }
+  })
+</script>
+```
+
+
+
+#### ⑤ v-model修饰符—lazy
+
+```text
+默认情况下，v-model双向绑定时，数据会高频的实时更新
+若不想如此高频的更新，就可以使用lazy延迟更新
+使用lazy后，只有在用户输入完数据 按回车 或 失去焦点 时才会更新数据
+```
+
+```html
+<input type="text" v-model.lazy="message">
+```
+
+
+
+#### ⑥v-model修饰符—number
+
+```text
+由于v-model向data中更新数据默认为 string 类型，
+因此想要传入number类型时，则可以使用number修饰符
+```
+
+```html
+<input type="number" v-model.number="mark">
+```
+
+
+
+#### ⑦v-model修饰符—trim
+
+```text
+去除输入内容两边的空格
+```
+
+```html
+<input type="text" v-model.trim="message">
+```
+
+
+
+
+
+
+
 
 
 ## 三、ES6补充
@@ -955,4 +1227,360 @@ const name = 'Mr.Liu';
 ```
 
 
+
+### 4、模板字符串：``
+
+```text
+``用作模板时，如换行这种操作，都会被看成一个整体，方便许多
+```
+
+
+
+
+
+## 四、组件化
+
+### 1、什么是组件化
+
+* 如果我们将一个页面的所有的处理逻辑放在一起，处理起来就会变得很复杂，而且不利于以后的管理和扩展
+* 但如果，把一个页面拆分成一个个小的==功能块==，每个功能块完成属于自己独立的功能，那么之后的管理和维护就简单了
+
+<img src="images/component.png" style="zoom:80%;" />
+
+<img src="images/component_vue.png" style="zoom:75%;" />
+
+
+
+
+
+### 2、组件化步骤
+
+* 创建组件构造器对象
+* 注册组件
+* 使用组件
+
+<img src="images/component_registry.png" style="zoom:80%;" />
+
+
+
+* 组件只能在==Vue实例范围==内使用
+
+
+
+==实例展示：==
+
+```html
+<div id="app">
+  <my-cpn></my-cpn>
+  <my-cpn></my-cpn>
+  <my-cpn></my-cpn>
+  <my-cpn></my-cpn>
+</div>
+
+<script>
+
+  //创建组件构造器
+  const componentConstructor = Vue.extend({
+    template: `
+      <div>
+        <h2>我是标题</h2>
+        <p>我是内容,哈哈哈</p>
+        <p>我是内容,嘿嘿嘿</p>
+      </div>
+    `
+  });
+
+  //注册组件(组件标签名, 构造器)
+  Vue.component('my-cpn', componentConstructor);
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+    }
+  })
+</script>
+```
+
+
+
+
+
+### 3、全局组件与局部组件
+
+* 全局组件：在任意Vue实例中都可使用
+  * 直接使用vue.js中的实例Vue来进行组件注册即可
+* 局部组件：在指定的Vue实例中可以使用
+  * 构造器可以写在vue.js的Vue实例中
+  * 注册时在相对应的Vue实例中进行注册
+
+
+
+==局部组件注册：==
+
+```html
+<div id="app">
+  <!--此处会报错-->
+  <cpn></cpn>
+</div>
+
+<div id="app2">
+  <cpn></cpn>
+  <cpn></cpn>
+  <cpn></cpn>
+</div>
+
+<script>
+
+  const cpnC = Vue.extend({
+    template: `
+      <div>
+        <h2>这是个标题</h2>
+        <p>这是内容,哈哈哈</p>
+      </div>
+    `
+  });
+
+  const app = new Vue({
+    el: '#app',
+    data: {}
+  });
+
+  const app2 = new Vue({
+    el: '#app2',
+    data: {},
+    components: {
+      // cpn：组件标签名
+      // cpnC：构造器
+      cpn: cpnC
+    },
+  });
+</script>
+```
+
+
+
+### 4、父组件与子组件
+
+```text
+父组件中可以注册子组件，从而使子组件可以在父组件的complete作用域中生效
+注意：
+	子组件构造器要在父组件构造器之前
+	在父组件的components属性中注册子组件
+	若子组件为全局组件，则可以不需要在父组件中进行注册即可使用
+```
+
+```html
+<div id="app">
+  <cpn2></cpn2>
+</div>
+
+<script>
+  <!--第一个组件构造器（子组件）-->
+  const cpnC1 = Vue.extend({
+    template:`
+      <div>
+        <h2>我是第一个组件</h2>
+      </div>
+    `
+  });
+
+  <!--第二个组件构造器（父组件）-->
+  const cpnC2 = Vue.extend({
+    template:`
+      <div>
+        <h2>我是第二个组件</h2>
+        <cpn1></cpn1>
+      </div>
+    `,
+    components: {
+      cpn1: cpnC1,
+    }
+  });
+
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!'
+    },
+    components: {
+      cpn2: cpnC2,
+    }
+  })
+</script>
+```
+
+
+
+### 5、注册组件的语法糖
+
+```html
+<script>
+  Vue.component('cpn1', {
+    template: `
+      <div>
+        <h2>我是全局组件</h2>
+      </div>
+    `,
+  })
+
+  const app = new Vue({
+    el: '#app',
+    components: {
+      cpn2: {
+        template: `
+          <div>
+            <h2>我是局部组件</h2>
+          </div>
+        `
+      }
+    }
+  })
+</script>
+```
+
+
+
+### 6、分离模板template
+
+```text
+1、使用script标签，但注意类型为：text/x-template，且要标明id
+```
+
+```html
+<script type="text/x-template" id="cpn1">
+  <div>
+    <h2>这是组件1</h2>
+  </div>
+</script>
+<script>
+    Vue.component('cpn1', {
+      template: '#cpn1'
+  	});
+</script>
+```
+
+```text
+2、使用template标签，标明id即可
+```
+
+```html
+<template id="cpn2">
+  <div>
+    <h2>这是组件2</h2>
+  </div>
+</template>
+```
+
+
+
+### 7、组件中的数据存放
+
+```text
+由于组件不能使用 Vue实例 的data，因此组件拥有自己的 data函数
+使用 data函数，要求函数返回一个对象类型
+```
+
+```html
+<template id="cpn1">
+  <h2>{{title}}</h2>
+</template>
+
+<script>
+  Vue.component('cpn1', {
+    template: '#cpn1',
+    data() {
+      return {
+        title: '我是组件1'
+      }
+    }
+  })
+</script>
+```
+
+
+
+==为什么组件的data是一个函数，而不是对象？==
+
+* 因为若data为一个对象，则在多次调用组件时，data返回的都是同一个对象，因此会**数据共享**
+* 而data为一个函数，多次调用时，返回的都是一个新的对象，数据就不会共享
+
+
+
+### 8、父子组件通信
+
+```text
+在实际开发过程中，页面请求服务器，拿到了数据data
+而部分data不是在最外层的组件中展示，而是需要内部的子组件进行展示时，就需要实现从上到下的数据传递
+那么如何进行父子组件的通信呢？
+Vue官方推荐：
+	1、使用props向子组件传递数据（父->子）
+	2、通过事件向父组件发送信息（子->父）
+```
+
+==1、使用props==
+
+* 在使用子组件时，需要绑定父子组件的数据
+
+```html
+<div id="app">
+  <cpn :cheros="heros" :cmessage="message"></cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <p>{{cheros}}</p>
+    <h2>{{cmessage}}</h2>
+  </div>
+</template>
+
+<script>
+
+  //组件对象
+  const cpn = {
+    template: '#cpn',
+    data() {return {}},
+    props: ['cheros', 'cmessage']
+  };
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      heros: ['海贼王', '海尔兄弟', '加百利']
+    },
+    components: {
+      cpn
+    }
+  })
+</script>
+```
+
+* ==props可以确定传递参数的类型==
+
+```html
+props: {
+      cheros: Array,
+      cmessage: String
+    }
+```
+
+* ==props可以确定传递参数的一些参数==
+
+```html
+//可以指定传递参数的一些参数
+    props: {
+      cmessage: {
+        type: String,
+        default: 'aaaaa',  //默认值
+        required: true,  //使用该组件时必须传递该参数cmessage
+      },
+      cheros: {
+        type: [Array, Object],  //若参数可能为多种类型，可以使用数组的形式
+        default() {  // 当参数类型为Object或Array时，默认值需为函数
+          return ['苹果', '香蕉'];
+        }
+      }
+    }
+```
 
