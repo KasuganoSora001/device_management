@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>计算属性基础使用</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <h2>{{fullName}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+
+    data: {
+      firstName: 'kobe',
+      lastName: 'bryant'
+    },
+
+    computed: {
+
+      // 成员属性的完整写法
+      fullName: {
+        set: function(newVaule){
+          const names = newVaule.split(' ');
+          this.firstName = names[0];
+          this.lastName = names[1];
+        },
+        get: function(){
+          return this.firstName + ' ' + this.lastName;
+        }
+      },
+
+      // 若属性为只读，可以为以下写法
+      fullName2: function(){
+        return this.firstName + ' ' + this.lastName;
+      }
+
+    }
+  })
+</script>
+
+</body>
+</html>

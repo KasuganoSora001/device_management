@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>分离模板</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <cpn2></cpn2>
+</div>
+
+<!--使用script标签，注意：类型为text/x-template-->
+<script type="text/x-template" id="cpn1">
+  <div>
+    <h2>这是组件1</h2>
+  </div>
+</script>
+
+
+<template id="cpn2">
+  <div>
+    <h2>这是组件2</h2>
+  </div>
+</template>
+
+<script>
+
+  Vue.component('cpn1', {
+    template: '#cpn1'
+  });
+
+  const app = new Vue({
+    el: '#app',
+    components: {
+      cpn2: {
+        template: '#cpn2'
+      }
+    }
+  })
+</script>
+</body>
+</html>

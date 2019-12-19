@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <cpn :cheros="heros" :cmessage="message"></cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <p>{{cheros}}</p>
+    <h2>{{cmessage}}</h2>
+  </div>
+</template>
+
+<script>
+
+  //组件对象
+  const cpn = {
+    template: '#cpn',
+    data() {return {}},
+    // props: ['cheros', 'cmessage']
+
+    //可以指定传递参数类型
+    // props: {
+    //   cheros: Array,
+    //   cmessage: String
+    // }
+
+    //可以指定传递参数的一些参数
+    props: {
+      cmessage: {
+        type: String,
+        default: 'aaaaa',  //默认值
+        required: true,  //使用该组件时必须传递该参数cmessage
+      },
+      cheros: {
+        type: [Array, Object],  //若参数可能为多种类型，可以使用数组的形式
+        default() {  // 当参数类型为Object或Array时，默认值需为函数
+          return ['苹果', '香蕉'];
+        }
+      }
+    }
+
+  };
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      heros: ['海贼王', '海尔兄弟', '加百利']
+    },
+    components: {
+      cpn
+    }
+  })
+</script>
+
+</body>
+</html>

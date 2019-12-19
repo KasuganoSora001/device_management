@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <cpn></cpn>
+  <cpn></cpn>
+  <cpn></cpn>
+
+</div>
+
+
+<template id="cpn">
+  <div>
+    <p>计数器：{{counter}}</p>
+    <button @click="incr">+</button>
+    <button @click="decr">-</button>
+  </div>
+
+
+</template>
+
+<script>
+
+  Vue.component('cpn', {
+    template: '#cpn',
+    data() {
+      return {
+        counter: 0
+      }
+    },
+    methods: {
+      incr() {
+        this.counter++;
+      },
+      decr() {
+        this.counter--;
+      }
+    }
+  });
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+    }
+  })
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> v-model 与 select结合使用 </title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+  <select name="fruit" v-model="fruit">
+    <option value="apple">苹果</option>
+    <option value="banana">香蕉</option>
+    <option value="peach">桃子</option>
+    <option value="purple">葡萄</option>
+  </select>
+  <h2>您的选择是：{{fruit}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      fruit: 'banana',
+    }
+  })
+</script>
+
+</body>
+</html>

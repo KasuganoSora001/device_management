@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图书馆购物车</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <table v-if="carIsNotEmpty">
+    <thead>
+      <tr>
+        <th></th>
+        <th>书籍名称</th>
+        <th>出版日期</th>
+        <th>价格</th>
+        <th>购买数量</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-for="(book,index) in books" key="book.id">
+        <td>{{index+1}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.data}}</td>
+        <td>{{getTotalPrice(book)}}</td>
+        <td>
+          <button @click="decrBtn(book)">-</button>
+          {{book.num}}
+          <button @click="incrBtn(book)">+</button>
+        </td>
+        <td>
+          <button @click="removeBtn(index)">移除</button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr><td>总价：{{totalPrice}}</td></tr>
+    </tfoot>
+
+  </table>
+  <h2 v-else>当前购物车为空</h2>
+
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      books: [
+        {id: 1, name: '《算法导论》', data: '2006-9', price: '￥85.00', num: 1},
+        {id: 2, name: '《UNIX编程艺术》', data: '2006-2', price: '￥59.00', num: 1},
+        {id: 3, name: '《编程珠玑》', data: '2008-10', price: '￥39.00', num: 1},
+        {id: 4, name: '《代码大全》', data: '2006-3', price: '￥128.00', num: 1}
+      ]
+    },
+    computed: {
+      totalPrice() {
+        let totalPrice = 0;
+        for(let book of this.books) {
+          let priceArr = book.price.split("￥");
+          let price = priceArr[1];
+          totalPrice += price * book.num;
+        }
+        return totalPrice;
+      },
+      carIsNotEmpty() {
+        if(this.books.length==0) {
+          return false;
+        }else {
+          return true;
+        }
+      }
+    },
+    methods: {
+      getTotalPrice(book) {
+        let priceArr = book.price.split("￥");
+        let price = priceArr[1];
+        return price * book.num;
+      },
+      decrBtn(book) {
+        let book_num = book.num;
+        if(book_num <= 0){return;}
+        book.num--;
+      },
+      incrBtn(book) {
+        book.num++;
+      },
+      removeBtn(index) {
+        this.books.splice(index,1);
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

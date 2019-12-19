@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <!-- lazy：延迟更新，当用户操作为 空格 | 失去焦点 时才更新数据 -->
+  <input type="text" v-model.lazy="message">
+  <h2>{{message}}</h2>
+
+  <!--
+    由于v-model向data中更新数据默认为 string 类型，因此想要传入number类型时，则可以使用number修饰符
+   -->
+  <input type="number" v-model.number="mark">
+  <h2>{{mark}}--{{typeof mark}}</h2>
+
+</div>
+
+
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      isAgree: '',
+      mark: 0
+    }
+  })
+</script>
+
+
+</body>
+</html>

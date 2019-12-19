@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> v-model 与 checkbox 的结合使用 </title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <!--
+    v-model 绑定 checkbox 是否选中：true | false
+    单个checkbox
+  -->
+  <label for="protocol">
+    <input type="checkbox" id="protocol" v-model="isAgree">同意协议
+  </label>
+  <button :disabled="!isAgree">下一步</button>
+
+  <br/>
+
+  <!--
+    v-model 绑定 checkbox 的value
+    多个checkbox
+  -->
+  <input type="checkbox" v-model="hobbies" value="篮球">篮球
+  <input type="checkbox" v-model="hobbies" value="足球">足球
+  <input type="checkbox" v-model="hobbies" value="乒乓球">乒乓球
+
+  <h2>您的兴趣爱好：[{{hobbies}}]</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      isAgree: false,
+      hobbies: []
+    }
+  })
+</script>
+
+
+
+</body>
+</html>

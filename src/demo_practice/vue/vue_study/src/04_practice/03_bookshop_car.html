@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图书馆购物车</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <table v-if="carIsNotEmpty">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>书籍名称</th>
+        <th>出版日期</th>
+        <th>价格</th>
+        <th>购买数量</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody style="text-align: center">
+      <tr v-for="(book,index) in books">
+        <td>{{index+1}}</td>
+        <td>{{book.name}}</td>
+        <td>{{book.data}}</td>
+        <td>{{getTotalPrice(book) | showPrice}}</td>
+        <td>
+          <button @click="decrBtn(book)" :disabled="book.num <= 0">-</button>
+          {{book.num}}
+          <button @click="incrBtn(book)">+</button>
+        </td>
+        <td>
+          <button @click="removeBtn(index)">移除</button>
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr><td>总价：{{totalPrice | showPrice}}</td></tr>
+    </tfoot>
+
+  </table>
+  <h2 v-else>当前购物车为空</h2>
+
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      books: [
+        {id: 1, name: '《算法导论》', data: '2006-9', price: '85.00', num: 1},
+        {id: 2, name: '《UNIX编程艺术》', data: '2006-2', price: '59.00', num: 1},
+        {id: 3, name: '《编程珠玑》', data: '2008-10', price: '39.00', num: 1},
+        {id: 4, name: '《代码大全》', data: '2006-3', price: '128.00', num: 1}
+      ]
+    },
+    computed: {
+      totalPrice() {
+        // let totalPrice = 0;
+        // for(let book of this.books) {
+        //   totalPrice += book.price * book.num;
+        // }
+        // return totalPrice;
+        return this.books.reduce(function(totalPrice, book) {
+          return totalPrice + book.price * book.num;
+        }, 0);
+      },
+      carIsNotEmpty() {
+        if(this.books.length==0) {
+          return false;
+        }else {
+          return true;
+        }
+      }
+    },
+    methods: {
+      getTotalPrice(book) {
+        return book.price * book.num;
+      },
+      decrBtn(book) {
+        book.num--;
+      },
+      incrBtn(book) {
+        book.num++;
+      },
+      removeBtn(index) {
+        this.books.splice(index,1);
+      }
+    },
+    filters: {
+      showPrice(price) {
+        return '￥' + price.toFixed(2);
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

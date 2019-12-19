@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+<!--
+  要求：做一个简单的登录界面，
+       实现账号密码登录和邮箱登录相互切换
+-->
+
+<div id="app">
+  <!--账号密码登录界面-->
+  <span v-if="isUserNameLogin">
+    用户账号：<input type="text" placeholder="用户账号" key="username">
+  </span>
+  <!--邮箱登录界面-->
+  <span v-else>
+    邮箱账号：<input type="text" placeholder="邮箱账号" key="email">
+  </span>
+  <!--切换界面按钮-->
+  <button @click="switchBtn">切换类型</button>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      isUserNameLogin: true
+    },
+    methods: {
+      switchBtn() {
+        this.isUserNameLogin = !this.isUserNameLogin;
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

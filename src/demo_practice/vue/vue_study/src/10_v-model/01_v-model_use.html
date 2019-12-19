@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>v-model基础使用</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<!--v-model基础使用-->
+<div id="app">
+  <input type="text" v-model="message">
+  <h2>{{message}}</h2>
+
+  <!--使用v-bind和v-on来实现v-model双向绑定-->
+  <input type="text" :value="message2" @input="message2 = $event.target.value">
+  <h2>{{message2}}</h2>
+
+</div>
+
+
+
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!',
+      message2: 'hello'
+    },
+    methods: {
+      changeMessage(event) {
+        this.message2 = event.target.value;
+      }
+    }
+  })
+</script>
+
+
+
+</body>
+</html>

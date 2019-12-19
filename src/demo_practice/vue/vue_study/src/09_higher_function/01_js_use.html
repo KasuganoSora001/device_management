@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>js高阶函数使用</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+
+<script>
+
+
+  const nums = [1, 20, 44, 110, 55, 200];
+
+  // filter：将数组进行过滤
+  // 返回值为true：将当前数组元素添加到新数组中
+  // 返回值为false：当前元素不会添加到新数组中
+  let newNums = nums.filter(function(n) {
+    return (n <= 100);
+  })
+
+  // map：将数组中的各个元素进行运算
+  // 返回值为运算后的结果，该结果会作为一个新元素添加到新数组中
+  let newNums2 = newNums.map(function(n) {
+    return n * 2;
+  })
+
+
+  // reduce：对数组进行汇总
+  // result：参数previousValue的初始值为reduce函数的第二个参数值，这里也就是0，若不写第二个参数，默认为0
+  // 每次返回的结果都会作为下一次遍历的result
+  // n：数组元素
+  let totalNum = newNums2.reduce(function(result, n) {
+    return result + n;
+  }, 0)
+
+
+  //简洁写法：链式编程
+  const marks = [2, 40, 200, 1000, 500];
+
+  let totalMarks = marks.filter(function(n) {
+    return n < 250;
+  }).map(function(n) {
+    return n * 2;
+  }).reduce(function(previousValue, n) {
+    return previousValue + n;
+  }, 0)
+
+
+  //箭头写法
+  const counts = [3, 20, 120, 530, 1000];
+
+  let totalCount = counts.filter(n => n < 100)
+                         .map(n => n * 2)
+                         .reduce((preVal, n) => preVal + n);
+
+  console.log(totalCount);
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>v-model与radio结合使用</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<!--
+  v-model 与 radio 的value双向绑定
+  改变data的值可以影响 radio 选项
+  使用v-model绑定统一data时，可以不用再写相同的name属性
+-->
+<div id="app">
+  <label for="male">
+    <input type="radio" id="male" v-model="gender" value="男">男
+  </label>
+  <label for="female">
+    <input type="radio" id="female" v-model="gender" value="女">女
+  </label>
+  <h2>您的性别是：{{gender}}</h2>
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      gender: '男'
+    }
+  })
+</script>
+
+
+
+</body>
+</html>

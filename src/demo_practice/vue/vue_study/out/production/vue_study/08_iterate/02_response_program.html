@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+
+<div id="app">
+
+  <ul>
+    <li v-for="(item,index) in letters">{{item}}</li>
+  </ul>
+
+  <button @click="btnClick">按钮</button>
+
+</div>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      letters: ['a', 'b', 'c', 'd']
+    },
+    methods: {
+      btnClick() {
+        // 1、push：在数组末尾添加元素
+        // this.letters.push('aaa', 'bbb', 'ccc');
+
+        // 2、pop：删除数组末尾元素
+        // this.letters.pop();
+
+        // 3、shift：删除数组第一个元素
+        // this.letters.shift();
+
+        // 4、unshift：在数组最前面添加元素
+        // this.letters.unshift('aaa', 'bbb', 'ccc');
+
+        // 5、splice：删除元素/替换元素/添加元素
+        // 第一个参数为start，也就是下标值
+        // 删除元素：第二个参数为删除元素的个数，从start下标开始，包括start，若不写，则删除所有
+        // 替换元素：在删除元素的基础上，后续参数为添加元素
+        // 插入元素：第二参数为0，后续参数为插入元素
+
+        // this.letters.splice(1, 1);
+        // this.letters.splice(1);
+
+        // this.letters.splice(1, 2, 'aaa', 'bbb', 'ccc');
+
+        // this.letters.splice(2, 0, 'aaa', 'bbb', 'ccc');
+
+        // 6、sort：数组排序
+        // 7、reverse：反转数组
+
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

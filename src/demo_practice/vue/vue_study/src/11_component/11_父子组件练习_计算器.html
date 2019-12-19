@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>练习：计数器</title>
+  <!--引入vue.js-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+
+
+<div id="app">
+  <show_cpn :counter="counter"></show_cpn>
+  <operate_cpn @incr_btn_click="incr" @decr_btn_click="decr"></operate_cpn>
+</div>
+
+<!--展示组件模板-->
+<template id="show_cpn">
+  <div>操作数：{{counter}}</div>
+</template>
+
+<!--操作组件模板-->
+<template id="operate_cpn">
+  <div>
+    <button @click="incr">+</button>
+    <button @click="decr">-</button>
+  </div>
+</template>
+
+<script>
+
+  // 展示组件
+  const show_cpn = {
+    template: '#show_cpn',
+    props: {
+      counter: {
+        type: Number,
+        default: 0
+      }
+    }
+  };
+
+
+
+  // 操作组件
+  const operate_cpn = {
+    template: '#operate_cpn',
+    methods: {
+      incr() {
+        this.$emit('incr_btn_click');
+      },
+      decr() {
+        this.$emit('decr_btn_click');
+      }
+    }
+  }
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      counter: 0,
+    },
+    components: {
+      show_cpn,
+      operate_cpn
+    },
+    methods: {
+      incr() {
+        this.counter++;
+      },
+      decr() {
+        this.counter--;
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

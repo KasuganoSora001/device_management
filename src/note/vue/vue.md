@@ -1507,7 +1507,7 @@ const name = 'Mr.Liu';
 
 
 
-### 8、父子组件通信
+### 8、父子组件通信(父传子props)
 
 ```text
 在实际开发过程中，页面请求服务器，拿到了数据data
@@ -1583,4 +1583,330 @@ props: {
       }
     }
 ```
+
+* ==props的驼峰写法==
+
+```html
+<div id="app">
+  <cpn :c-info="info" :child-message="message"></cpn>
+</div>
+
+<script>
+    const cpn = {
+        template: '#cpn',
+        props: {
+          cInfo: {
+            type: Object,
+            default() {
+              return {}
+            }
+          },
+          childMessage: {
+            type: String,
+            default: 'aaa'
+          }
+        }
+      };
+</script>
+
+```
+
+
+
+### 9、父子组件通信（子传父）
+
+```text
+1、props用于父传子，而子传父则需要使用 自定义事件
+2、子组件通过在methods中使用 this.$emit('事件名', 参数) 来发射自定义事件
+3、父组件通过在调用子组件标签时，监听对应事件名来进行参数的获取
+```
+
+```html
+<div id="app">
+  <!--父组件监听子组件发射的事件-->
+  <cpn @cpn_click="cpnClick"></cpn>
+</div>
+
+<!-- 子组件模板 -->
+<template id="cpn">
+  <div>
+    <!--监听按钮点击事件，并向父组件发射自定义事件传输数据-->
+    <button v-for="item in categories"
+            @click="btnClick(item)">{{item.name}}</button>
+  </div>
+</template>
+
+<script>
+  // 子组件对象
+  const cpn = {
+    template: '#cpn',
+    data() {
+      return {
+        categories: [
+          {id: 'aaa', name: '热门推荐'},
+          {id: 'bbb', name: '热门家电'},
+          {id: 'ccc', name: '电脑游戏'},
+        ]
+      }
+    },
+    methods: {
+      btnClick(item) {
+        // 向父组件发射自定事件
+        this.$emit('cpn_click', item);
+      }
+    }
+  };
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: 'hello Vue!'
+    },
+    components: {
+      cpn
+    },
+    methods: {
+      // 监听到子组件事件后处理数据
+      cpnClick(item) {
+        console.log(item);
+      }
+    },
+  })
+</script>
+```
+
+
+
+
+
+### 10、父组件访问子组件$refs
+
+```text
+1、父组件可以通过调用 this.$refs.refName 来查看VueComponent组件对象
+2、子组件在被调用时，需添加属性refName，父组件以此来识别
+3、父组件访问子组件可以调用子组件的方法，获取子组件的属性
+```
+
+```html
+<div id="app">
+  <cpn></cpn>
+  <cpn></cpn>
+  <cpn ref="aaa"></cpn>
+  <button @click="btnClick">按钮</button>
+</div>
+
+<template id="cpn">
+  <div>
+    <p>我是子组件</p>
+  </div>
+</template>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components: {
+      cpn: {
+        template: '#cpn',
+        data() {
+          return {
+            name: '子组件'
+          }
+        },
+        methods: {
+          getMessage() {
+            console.log('我是子组件的方法');
+          }
+        }
+      }
+    },
+    methods: {
+      btnClick() {
+        console.log(this.$refs.aaa.name);
+        this.$refs.aaa.getMessage();
+      }
+    }
+  })
+</script>
+```
+
+
+
+### 11、插槽
+
+#### 1、基础使用
+
+```text
+1、插槽时扩展子组件模板的一种的写法，由于子组件中有些部分需要由父组件来决定内容，因此可以使用插槽
+2、插槽的使用：
+	子组件中使用<slot>标签
+	父组件中引用子组件时使用v-slot属性
+	v-slot缩写：#
+	在子组件标签中填写内容
+3、插槽默认值：直接在<slot>标签中填写默认值，若父组件没有指定内容，则使用默认值
+```
+
+```html
+<div id="app">
+  <cpn v-slot:default>
+    <p>我是父组件</p>
+    <button>按钮</button>
+  </cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <p>我是子组件</p>
+    <slot><button>按钮</button></slot>
+  </div>
+</template>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components: {
+      cpn: {
+        template: '#cpn',
+      }
+    }
+  })
+</script>
+```
+
+
+
+#### 2、具名插槽的使用：
+
+```text
+1、<slot>标签可以有属性name，以此来区分
+2、父组件在添加插槽内容的时，在外包一层<template v-slot:name>,若slot没有name，则v-slot:default
+3、若父组件没有指定内容slot属性，则插入的内容为没有name的slot标签
+```
+
+```html
+<div id="app">
+  <cpn>
+    <template v-slot:left>
+      <button >按钮</button>
+    </template>
+    <template v-slot:center>
+      <a href="#">中间</a>
+    </template>
+    <template #default>
+      <p>我是父组件</p>
+    </template>
+
+  </cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <slot name="left"><span>左边</span></slot>
+    <slot name="center"><span>中间</span></slot>
+    <slot name="right"><span>右边</span></slot>
+    <slot></slot>
+  </div>
+</template>
+```
+
+
+
+#### 3、编译作用域
+
+```text
+1、组件中进行data数据绑定查询时，只会在当前组件下寻找，不会从子组件中取数据
+2、如下列代码，pLanguages是子组件的数据，在父组件调用子组件时，是不能够获取到的
+```
+
+```html
+<div id="app">
+  <cpn>
+    <template #center>
+      <span>{{pLanguages}}</span>
+    </template>
+  </cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <slot name="center" :data="pLanguages">
+      <ul>
+        <li v-for="item in pLanguages">{{item}}</li>
+      </ul>
+    </slot>
+  </div>
+</template>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components: {
+      cpn: {
+        template: '#cpn',
+        data() {
+          return {
+            pLanguages: ['JavaScript', 'Java', 'C++', 'Python']
+          }
+        }
+      }
+    }
+  })
+</script>
+```
+
+
+
+#### 4、作用域插槽
+
+```text
+1、有时候，子组件展示数据的方式，并不是父组件想要的
+2、这时候，父组件就希望能够拿到子组件的数据，从而从新展示
+```
+
+```html
+<div id="app">
+  <cpn></cpn>
+  <cpn>
+    <template #center="pLanguages">
+      <!--通过pLanguages.data来获取数据-->
+      <span>{{pLanguages.data.join(' - ')}}</span>
+    </template>
+  </cpn>
+</div>
+
+<template id="cpn">
+  <div>
+    <slot name="center" :data="pLanguages">
+      <ul>
+        <li v-for="item in pLanguages">{{item}}</li>
+      </ul>
+    </slot>
+  </div>
+</template>
+
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components: {
+      cpn: {
+        template: '#cpn',
+        data() {
+          return {
+            pLanguages: ['JavaScript', 'Java', 'C++', 'Python']
+          }
+        }
+      }
+    }
+  })
+</script>
+```
+
+
 
