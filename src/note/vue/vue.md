@@ -1866,6 +1866,8 @@ props: {
 ```text
 1、有时候，子组件展示数据的方式，并不是父组件想要的
 2、这时候，父组件就希望能够拿到子组件的数据，从而从新展示
+3、这时，子组件就可以在<slot>标签中绑定数据
+	    父组件可以在v-slot中指定获取数据
 ```
 
 ```html
@@ -1909,4 +1911,253 @@ props: {
 ```
 
 
+
+## 五、模块化
+
+### 1、CommonJS
+
+* 模块化有两个核心：导出和导入
+* CommonJS的导出：
+
+```html
+module.exports = {
+	flag: true,
+	func(a, b) {}
+}
+```
+
+* CommonJS的导入：
+
+```html
+let {flag, func} = require('moduleA');
+```
+
+
+
+### 2、ES模块化
+
+```text
+1、首先需要将js文件模块化，在引入js文件时，type为module即可
+```
+
+```html
+<script src="aaa.js" type="module"></script>
+<script src="ccc.js" type="module"></script>
+```
+
+```text
+2、使用export来导出属性或方法
+```
+
+```javascript
+let name = '小明';
+
+let flag = true;
+
+function sum(num1, num2) {
+  return num1 + num2;
+}
+
+if(flag) {
+  console.log(sum(20, 50));
+}
+
+// 1、导出方式1
+export {flag, sum}
+
+
+// 2、导出方式2
+export let num1 = 10;
+
+export class Person {
+  run() {
+    console.log("run");
+  }
+}
+```
+
+```text
+3、使用import接收
+```
+
+```javascript
+import {flag, sum, num1, Person} from "./aaa.js";
+```
+
+```text
+4、export default：只导出一个值，接收时可以随意命名
+```
+
+```javascript
+// 3、export default
+export const address = '广州市';
+
+// export default address;
+
+// aaa.js导出export default（可以为方法，也可以为属性）
+export default function func(arguement) {
+  console.log(arguement);
+}
+
+// ccc.js导入export default
+import addr from "./aaa.js";
+```
+
+```text
+5、导入所有
+```
+
+```javascript
+import * as aaa from "./aaa.js";
+console.log(aaa.address);
+```
+
+
+
+## 六、Webpack
+
+### 1、介绍
+
+* 什么是webpack？
+  * 从本质上来讲，webpack是一个现代的JavaScript应用的静态**模块打包**工具
+  * ES6之前，前端模块化开发都需要工具来进行支持
+  * 而webpack的核心则是可以进行模块化开发，且帮助我们处理模块之间的依赖关系
+  * webpack运行依赖node环境
+
+
+
+### 2、安装
+
+```text
+1、首先需要安装node.js
+2、全局安装webpack：
+	在terminal中输入指令：npm install webpack@3.6.0 -g
+3、局部安装webpack：
+	npm install webpack@3.6.0 --save-dev
+4、很多时候我们使用的都是局部的webpack，由于每个项目都可能依赖不同的webpack版本，因此依赖全局webpack就有可能发生打包出错的现象
+```
+
+
+
+### 3、使用
+
+```text
+1、webpack管理下有两个文件夹：src | dist
+2、src主要存放模块化文件，dist主要存放经webpack打包后的文件
+3、打包命令：
+	在terminal下：webpack ./src/main.js ./dist/bundle.js
+4、进行打包时，会对打包的文件所依赖的其他文件进行管理，如main.js依赖utils.js，则只需打包main.js即可
+5、在进行script引用时，只需要引入dist下处理后的文件即可
+```
+
+
+
+### 4、配置文件
+
+```text
+1、配置文件名：webpack.config.js，路径：与dist | src同层级
+2、作用：
+	可以控制打包的入口和出口
+3、打包：在控制台输入webpack即可
+```
+
+```javascript
+const path = require('path');
+
+module.exports = {
+  entry: './src/main.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  }
+}
+```
+
+程序初始化node：生成package.json文件
+
+```text
+npm init
+npm install
+```
+
+由于配置文件中配置出口时需指定 ==绝对路径==，因此需要用到node中 path模块 的 resolve方法
+
+resolve()：组合字符串
+
+__dirname：获取当前文件所在的绝对路径
+
+
+
+```text
+将webpack指令映射为 npm run build
+在webpack.config.json的scripts属性中添加build：
+npm run 会从scripts中寻找指令
+```
+
+```json
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+```
+
+
+
+注意：若在terminal中使用webpack指令，则会使用全局webpack，
+
+​	       若想要使用局部webpack，则需要在当前项目下下载开发版本webpack，然后在package.json中绑定，
+
+​			再使用npm run指令就能使用局部webpack
+
+
+
+
+
+### 5、loader
+
+* 在之前的实例中，webpack主要处理js代码，但是在开发中，我们不仅有js代码处理，也需要加载css、图片、ES6转ES5、TypeScript转ES5、scss,less转css、.jsx,.vue转js等等
+* 对于webpack来说，对这些转化都是不支持的
+* 这时就需要给webpack扩展对应的loader
+
+
+
+如何找loader：
+
+* 进入[webpack官网]( https://www.webpackjs.com/ )
+* 进入中文文档-->LOADERS
+
+
+
+### 6、css文件的配置
+
+* 1、编写css文件，并在main.js中进行依赖，否则无法打包
+
+```javascript
+// 依赖css文件：commonJS写法
+require('./css/normal.css');
+
+// import css from "./css/normal.css";
+```
+
+* 2、安装对应的loader，style-loader、css-loader
+  * style-loader：负责将样式导出到DOM中
+  * css-loader：负责加载css文件
+* 3、配置webpack.config.js文件，按照官方文档配置
+
+```javascript
+module: {
+    rules: [
+      {
+        // 正则匹配以.css结尾的文件
+        test: /\.css$/,
+        // css-loader：加载css文件
+        // style-loader：添加样式到DOM中
+        // 使用多个loader时，加载从右往左
+        use: [ 'style-loader', 'css-loader' ]
+      }
+    ]
+  }
+```
+
+* 4、打包
 
